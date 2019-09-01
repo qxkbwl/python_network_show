@@ -5,7 +5,7 @@ import tkinter as tk
 import tkinter.messagebox
 import webbrowser
 #软件版本控制的是exe文件版本，主要作用是软件功能上的：检查更新
-from versions import network_version#軟件版本
+from exe_versions import network_version#軟件版本
 import requests
 
 network_list = [i for i in psutil.net_io_counters()]#获取网络数据
@@ -84,7 +84,7 @@ def fun_tk():
     def update_disponse():
         r = requests.get("https://raw.githubusercontent.com/qxkbwl/python_network_show/master/exe_versions.py")
         try:
-            if r.text.split("=")[1] == network_version:
+            if int(r.text.split("=")[1]) == network_version:
                 tkinter.messagebox.showinfo(title='正在檢查更新', message='暫時沒有更新！') 
             else:
                 webbrowser.open("https://github.com/qxkbwl/python_network_show/raw/master/dist/network_python.exe")
