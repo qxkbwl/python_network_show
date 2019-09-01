@@ -2,8 +2,10 @@ import psutil
 from time import sleep
 import threading
 import tkinter as tk
-
-
+import tkinter.messagebox
+import webbrowser
+from versions import network_version#軟件版本
+import requests
 
 network_list = [i for i in psutil.net_io_counters()]#获取网络数据
 up_send = network_list[0]#发送数据包 单位字节
@@ -76,8 +78,28 @@ def fun_tk():
         height=50,
     )
     l.pack()
+    #添加標簽菜單
+    #處理檢查更新
+    def update_disponse():
+        r = requests.get("https://raw.githubusercontent.com/qxkbwl/python_network_show/master/versions.py")
+        try:
+            if r.text.split("=")[1] == network_version:
+                tkinter.messagebox.showinfo(title='正在檢查更新', message='暫時沒有更新！') 
+            else:
+                webbrowser.open("https://github.com/qxkbwl/python_network_show/raw/master/dist/network_python.exe")
+        except Exception:
+            tkinter.messagebox.showinfo(title='檢查更新時出錯', message="报错内容：%s。請聯係管理員反饋"%(r.text))
+            
+    menuber = tk.Menu(windos) 
+    update_menu = tk.Menu(menuber, tearoff=0)
+    menuber.add_cascade(label="更多", menu=update_menu)
+    # #加入小菜單
+    update_menu.add_command(label="檢查更新", command=update_disponse)    
+    
 
+    windos.config(menu=menuber)
     windos.mainloop()
+
 
 tk_th = threading.Thread(target=fun_tk, name="tk")
 
@@ -91,5 +113,4 @@ while True:
 
     error_status = hit_me()
     
-        
-
+ 
